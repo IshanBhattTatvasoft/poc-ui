@@ -21,7 +21,7 @@ function AddTask({ show, handleClose, username }) {
       console.log(requestBody);
 
       const response = await axios.post(
-        "https://4ozpdvh0y2.execute-api.eu-west-1.amazonaws.com/dev/add-task",
+        "https://28ivb3d4wd.execute-api.eu-west-1.amazonaws.com/dev/add-task",
         requestBody
       );
       console.log("Task added successfully:", response.data);

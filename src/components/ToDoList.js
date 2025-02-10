@@ -35,7 +35,7 @@ const ToDoList = () => {
     console.log("handleClose called");
     setShowAddTaskModal(false);
     await axios
-      .post("https://4ozpdvh0y2.execute-api.eu-west-1.amazonaws.com/dev/get-tasks-by-username", { username })
+      .post("https://28ivb3d4wd.execute-api.eu-west-1.amazonaws.com/dev/get-tasks-by-username", { username })
       .then((res) => {
         console.log(res.data);
         setTasks(res.data.task);
@@ -52,7 +52,7 @@ const ToDoList = () => {
 
   const deleteTask = async (id) => {
     try {
-      await axios.delete(`https://4ozpdvh0y2.execute-api.eu-west-1.amazonaws.com/dev/delete-task/${id}`);
+      await axios.delete(`https://28ivb3d4wd.execute-api.eu-west-1.amazonaws.com/dev/delete-task/${id}`);
       toast.success("Task deleted successfully!", {
         className: "custom-toast custom-toast-success",
         position: "top-right",
@@ -84,7 +84,7 @@ const ToDoList = () => {
 
     try {
       const response = await axios.post(
-        "https://4ozpdvh0y2.execute-api.eu-west-1.amazonaws.com/dev/get-single-task",
+        "https://28ivb3d4wd.execute-api.eu-west-1.amazonaws.com/dev/get-single-task",
         {
           id,
         }
