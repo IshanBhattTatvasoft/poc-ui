@@ -12,3 +12,4 @@ phases:
     commands:
       - echo "Uploading files to S3"
       - aws s3 cp ./build s3://ui-artifacts-poc-zero-downtime/ --recursive
+      #testcomment
