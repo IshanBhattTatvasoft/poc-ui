@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -8,7 +7,6 @@ import { toast } from "react-toastify";
 function AddUser({ show, handleAddUserModalClose }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [isTaskAdded, setIsTaskAdded] = useState(false);
 
   const addUser = async () => {
     try {

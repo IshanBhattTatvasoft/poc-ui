@@ -1,5 +1,5 @@
 // App.js File
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import Container from "react-bootstrap/Container";
@@ -15,7 +15,6 @@ const HomePage = () => {
   const navigate = useNavigate();
   const [addUserModalShow, setAddUserModalShow] = useState(false);
   const [username, setUsername] = useState("");
-  const [tasks, setTasks] = useState(null);
 
   const getAllTasks = async () => {
     console.log(username);

@@ -1,13 +1,8 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
-import InputGroup from "react-bootstrap/InputGroup";
-import FormControl from "react-bootstrap/FormControl";
-import ListGroup from "react-bootstrap/ListGroup";
 import "../style/ToDoList.css";
 import { Trash, PencilSquare } from "react-bootstrap-icons";
 import AddTask from "./AddTask";
@@ -25,10 +20,12 @@ const ToDoList = () => {
 
   useEffect(() => {
     setTasks(task);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     handleClose();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleClose = async () => {

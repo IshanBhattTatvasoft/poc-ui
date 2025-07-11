@@ -29,7 +29,7 @@ function EditTask({
   }, [taskDetails]);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type } = e.target;
     setUpdatedTaskDetails((prev) => ({
       ...prev,
       [name]: type === "checkbox" || type === "radio" ? value === "true" : value,
