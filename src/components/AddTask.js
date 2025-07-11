@@ -1,0 +1,111 @@
+import React, { useEffect, useState } from "react";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import Modal from "react-bootstrap/Modal";
+import axios from "axios";
+import { toast } from "react-toastify";
+
+function AddTask({ show, handleClose, username }) {
+  const [taskName, setTaskName] = useState("");
+  const [taskPriority, setTaskPriority] = useState("high");
+  const [isTaskAdded, setIsTaskAdded] = useState(false);
+
+  const addTask = async () => {
+    try {
+      const requestBody = {
+        username,
+        task_name: taskName,
+        task_priority: taskPriority,
+      };
+
+      console.log(requestBody);
+
+      const response = await axios.post(
+        "https://28ivb3d4wd.execute-api.eu-west-1.amazonaws.com/dev/add-task",
+        requestBody
+      );
+      console.log("Task added successfully:", response.data);
+
+      setTaskName("");
+      setTaskPriority("medium");
+      setIsTaskAdded(true);
+
+      toast.success("Task added successfully!", {
+        className: "custom-toast custom-toast-success",
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
+      handleClose();
+    } catch (error) {
+      console.error("Error adding task:", error);
+      toast.error("Failed to add task. Please try again.", {
+        className: "custom-toast custom-toast-error",
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
+
+  return (
+    <Modal show={show} onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>Add task</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <form>
+          <div className="mb-3">
+            <label htmlFor="text" className="form-label">
+              Task Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              className="form-control"
+              placeholder="Enter task name"
+              onChange={(e) => setTaskName(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="taskPriority" className="form-label">
+              Task Priority
+            </label>
+            <select
+              id="taskPriority"
+              name="taskPriority"
+              className="form-select"
+              value={taskPriority}
+              onChange={(e) => setTaskPriority(e.target.value)}
+            >
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+        </form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>
+          Close
+        </Button>
+        <Button variant="primary" onClick={addTask}>
+          Add Task
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+}
+
+export default AddTask;
