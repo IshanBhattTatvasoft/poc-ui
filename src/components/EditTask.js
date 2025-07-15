@@ -59,7 +59,7 @@ function EditTask({
       console.log("Updated task:", response.data);
 
       toast.success("Task updated successfully!", {
-        className: "custom-toast custom-toast-success",
+        className: "custom-toast",
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -74,7 +74,7 @@ function EditTask({
     } catch (error) {
       console.error("Error updating task:", error);
       toast.error("Failed to update task. Please try again.", {
-        className: "custom-toast custom-toast-error",
+        className: "custom-toast",
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,

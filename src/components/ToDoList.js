@@ -60,7 +60,7 @@ const ToDoList = () => {
         `https://2lilsddaz7.execute-api.eu-west-1.amazonaws.com/dev/delete-task/${id}`
       );
       toast.success("Task deleted successfully!", {
-        className: "custom-toast custom-toast-success",
+        className: "custom-toast",
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -72,7 +72,7 @@ const ToDoList = () => {
       handleClose();
     } catch (err) {
       toast.error("Failed to delete task. Please try again.", {
-        className: "custom-toast custom-toast-error",
+        className: "custom-toast",
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,

@@ -26,7 +26,7 @@ function AddUser({ show, handleAddUserModalClose }) {
       console.log("Task added successfully:", response.data);
 
       toast.success("User added successfully!", {
-        className: "custom-toast custom-toast-success",
+        className: "custom-toast",
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -40,7 +40,7 @@ function AddUser({ show, handleAddUserModalClose }) {
     } catch (error) {
       console.error("Error adding task:", error);
       toast.error("Failed to add user. Please try again.", {
-        className: "custom-toast custom-toast-error",
+        className: "custom-toast",
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
