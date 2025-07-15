@@ -45,7 +45,7 @@
   border-radius: 8px !important; /* Rounded corners */
 }
 
-.custom-toast-error {
+.custom-toast-error{
   border-color: #db3b41 !important; /* Red border for errors */
 }
 
