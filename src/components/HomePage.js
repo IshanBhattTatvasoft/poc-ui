@@ -25,7 +25,7 @@ const HomePage = () => {
       .then((res) => {
         console.log(res.data);
         navigate("/my-tasks", {
-          state: { task: res.data.task, username: username },
+          state: { task: res.data.tasks, username: username },
         });
       })
       .catch((err) => {

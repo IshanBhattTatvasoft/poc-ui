@@ -18,7 +18,9 @@ import { toast } from "react-toastify";
 const ToDoList = () => {
   const location = useLocation();
   const { task, username } = location.state || {};
+  console.log("task::: ", task);
   const [tasks, setTasks] = useState(task);
+  console.log("tasks::: ", tasks);
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
   const [showEditTaskModal, setShowEditTaskModal] = useState(false);
   const [taskDetails, setTaskDetails] = useState(null);
@@ -26,8 +28,24 @@ const ToDoList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setTasks(task);
-  }, []);
+    if (task) {
+      setTasks(task);
+    } else {
+      fetchTasks();
+    }
+  }, [task]);
+
+  const fetchTasks = async () => {
+    try {
+      const response = await axios.post(
+        "https://mraesrsn9j.execute-api.eu-west-1.amazonaws.com/dev/get-tasks-by-username",
+        { username }
+      );
+      setTasks(response.data.task);
+    } catch (err) {
+      console.error("Error fetching tasks:", err);
+    }
+  };
 
   useEffect(() => {
     handleClose();
@@ -36,22 +54,13 @@ const ToDoList = () => {
   const handleClose = async () => {
     console.log("handleClose called");
     setShowAddTaskModal(false);
-    await axios
-      .post(
-        "https://mraesrsn9j.execute-api.eu-west-1.amazonaws.com/dev/get-tasks-by-username",
-        { username }
-      )
-      .then((res) => {
-        setTasks(res.data.task); // changed tasks to task
-      })
-      .catch((err) => {
-        console.error("Error fetching tasks:", err);
-      });
+    await fetchTasks();
   };
 
-  const handleEditModalClose = () => {
+  const handleEditModalClose = async () => {
     console.log("handleEditModalClose called");
     setShowEditTaskModal(false);
+    await fetchTasks();
   };
 
   const deleteTask = async (id) => {
@@ -108,7 +117,6 @@ const ToDoList = () => {
   };
 
   const handleShow = () => setShowAddTaskModal(true);
-  //   const handleEditModalShow = () => setShowEditTaskModal(true);
 
   return (
     <Container>
@@ -148,7 +156,7 @@ const ToDoList = () => {
           </button>
         </div>
 
-        {tasks ? (
+        {task ? (
           <ul>
             <div className="row">
               <div className="col-12">
@@ -165,16 +173,18 @@ const ToDoList = () => {
                   </thead>
 
                   <tbody>
-                    {tasks.map((task, index) => (
-                      <tr>
+                    {task.map((task, index) => (
+                      <tr key={task.id || index}>
                         <td className="my-auto">{task.task_name}</td>
                         <td>{task.task_priority}</td>
                         <td>{task.istaskcompleted ? "Yes" : "No"}</td>
                         <td>
                           {task.remaining_days === "Overdue" ? (
-                            <span style={{ color: "red" }}>Deadline passed</span>
+                            <span style={{ color: "red" }}>
+                              Deadline passed
+                            </span>
                           ) : (
-                            `${task.remaining_days} days remaining`
+                            `${task.remaining_days}`
                           )}
                         </td>
                         <td>
@@ -187,11 +197,12 @@ const ToDoList = () => {
                           </button>
                         </td>
                         <td>
-                          <button type="button" className="btn btn-danger">
-                            <Trash
-                              className="actionButton"
-                              onClick={() => deleteTask(task.id)}
-                            />
+                          <button
+                            type="button"
+                            className="btn btn-danger"
+                            onClick={() => deleteTask(task.id)}
+                          >
+                            <Trash className="actionButton" />
                           </button>
                         </td>
                       </tr>
