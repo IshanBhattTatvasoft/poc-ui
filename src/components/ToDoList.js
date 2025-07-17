@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -9,6 +9,7 @@ import AddTask from "./AddTask";
 import axios from "axios";
 import EditTask from "./EditTask";
 import { toast } from "react-toastify";
+import { useWebSocketMessage } from "../context/WebSocketContext";
 
 const ToDoList = () => {
   const location = useLocation();
@@ -17,29 +18,14 @@ const ToDoList = () => {
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
   const [showEditTaskModal, setShowEditTaskModal] = useState(false);
   const [taskDetails, setTaskDetails] = useState(null);
-  const [webSocketMessage, setWebSocketMessage] = useState("");
   const ws = useRef(null);
+  const { webSocketMessage } = useWebSocketMessage();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    setTasks(task);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     handleClose();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    ws.current = new WebSocket("ws://localhost:8080");
-
-    ws.current.onmessage = (event) => {
-      setWebSocketMessage(event.data);
-    };
-
-    return () => {
-      ws.current?.close();
-    };
   }, []);
 
   const handleClose = async () => {
@@ -49,7 +35,7 @@ const ToDoList = () => {
       .post("https://693utogn2j.execute-api.eu-west-1.amazonaws.com/dev/get-tasks-by-username", { username })
       .then((res) => {
         console.log(res.data);
-        setTasks(res.data.task);
+        setTasks(res.data.tasks);
       })
       .catch((err) => {
         console.error("Error fetching tasks:", err);
@@ -108,6 +94,10 @@ const ToDoList = () => {
     }
   };
 
+  const navigateToHome = () => {
+    navigate("/");
+  };
+
   const handleShow = () => setShowAddTaskModal(true);
   //   const handleEditModalShow = () => setShowEditTaskModal(true);
 
@@ -129,20 +119,28 @@ const ToDoList = () => {
         <div
           style={{
             display: "flex",
-            justifyContent: "end",
+            justifyContent: "space-between",
             marginBottom: "30px",
           }}
         >
           <button
             type="button"
-            className="btn btn-primary"
+            className="btn btn-primary add-task-button"
             onClick={handleShow}
           >
             Add Task
           </button>
+
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={navigateToHome}
+          >
+            Back
+          </button>
         </div>
 
-        {tasks ? (
+        {Array.isArray(tasks) && tasks.length > 0 ? (
           <ul>
             <div className="row">
               <div className="col-12">

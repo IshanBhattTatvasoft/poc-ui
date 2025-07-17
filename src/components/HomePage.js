@@ -10,12 +10,13 @@ import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import axios from "axios";
 import AddUser from "./AddUser";
+import { useWebSocketMessage } from "../context/WebSocketContext";
 
 const HomePage = () => {
   const navigate = useNavigate();
   const [addUserModalShow, setAddUserModalShow] = useState(false);
   const [username, setUsername] = useState("");
-  const [webSocketMessage, setWebSocketMessage] = useState("");
+  const { webSocketMessage } = useWebSocketMessage();
   const ws = useRef(null);
 
   const getAllTasks = async () => {
@@ -26,7 +27,7 @@ const HomePage = () => {
       .then((res) => {
         console.log(res.data);
         navigate("/my-tasks", {
-          state: { task: res.data.task, username: username },
+          state: { task: res.data.tasks, username: username },
         });
       })
       .catch((err) => {
@@ -41,18 +42,6 @@ const HomePage = () => {
     console.log("handleAddUserModalClose called");
     setAddUserModalShow(false);
   };
-
-  useEffect(() => {
-    ws.current = new WebSocket("ws://localhost:8080");
-
-    ws.current.onmessage = (event) => {
-      setWebSocketMessage(event.data);
-    };
-
-    return () => {
-      ws.current?.close();
-    };
-  }, []);
 
   return (
     <Container>
