@@ -46,7 +46,7 @@ const HomePage = () => {
     ws.current = new WebSocket("ws://localhost:8080");
 
     ws.current.onmessage = (event) => {
-      setWebSocketMessage(event.data); // set the response
+      setWebSocketMessage(event.data);
     };
 
     return () => {
