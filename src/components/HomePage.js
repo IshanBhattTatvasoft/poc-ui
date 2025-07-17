@@ -1,5 +1,5 @@
 // App.js File
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import Container from "react-bootstrap/Container";
@@ -15,6 +15,8 @@ const HomePage = () => {
   const navigate = useNavigate();
   const [addUserModalShow, setAddUserModalShow] = useState(false);
   const [username, setUsername] = useState("");
+  const [webSocketMessage, setWebSocketMessage] = useState("");
+  const ws = useRef(null);
 
   const getAllTasks = async () => {
     console.log(username);
@@ -39,6 +41,18 @@ const HomePage = () => {
     console.log("handleAddUserModalClose called");
     setAddUserModalShow(false);
   };
+
+  useEffect(() => {
+    ws.current = new WebSocket("ws://localhost:8080");
+
+    ws.current.onmessage = (event) => {
+      setWebSocketMessage(event.data);
+    };
+
+    return () => {
+      ws.current?.close();
+    };
+  }, []);
 
   return (
     <Container>
@@ -79,7 +93,11 @@ const HomePage = () => {
           </InputGroup>
           <span>
             If you are a new user,{" "}
-            <Button style={{padding: "0px", textDecoration: "none"}} variant="link" onClick={handleAddUserModal}>
+            <Button
+              style={{ padding: "0px", textDecoration: "none" }}
+              variant="link"
+              onClick={handleAddUserModal}
+            >
               click here
             </Button>{" "}
           </span>
@@ -90,6 +108,25 @@ const HomePage = () => {
         show={addUserModalShow}
         handleAddUserModalClose={handleAddUserModalClose}
       />
+
+      {webSocketMessage && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: "10px",
+            left: "10px",
+            color: "black",
+            padding: "8px 12px",
+            border: "1px solid black",
+            borderRadius: "4px",
+            fontSize: "1.3rem",
+            fontWeight: "bold",
+            zIndex: 9999,
+          }}
+        >
+          {webSocketMessage}
+        </div>
+      )}
     </Container>
   );
 };
