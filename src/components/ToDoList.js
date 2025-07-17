@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import Container from "react-bootstrap/Container";
@@ -24,6 +24,8 @@ const ToDoList = () => {
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
   const [showEditTaskModal, setShowEditTaskModal] = useState(false);
   const [taskDetails, setTaskDetails] = useState(null);
+  const [webSocketMessage, setWebSocketMessage] = useState("");
+  const ws = useRef(null);
 
   const navigate = useNavigate();
 
@@ -34,6 +36,18 @@ const ToDoList = () => {
       fetchTasks();
     }
   }, [task]);
+
+  useEffect(() => {
+    ws.current = new WebSocket("ws://localhost:8080");
+
+    ws.current.onmessage = (event) => {
+      setWebSocketMessage(event.data);
+    };
+
+    return () => {
+      ws.current?.close();
+    };
+  }, []);
 
   const fetchTasks = async () => {
     try {
@@ -230,6 +244,25 @@ const ToDoList = () => {
         username={username}
         taskDetails={taskDetails}
       />
+
+      {webSocketMessage && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: "10px",
+            left: "10px",
+            color: "black",
+            padding: "8px 12px",
+            border: "1px solid black",
+            borderRadius: "4px",
+            fontSize: "1.3rem",
+            fontWeight: "bold",
+            zIndex: 9999,
+          }}
+        >
+          {webSocketMessage}
+        </div>
+      )}
     </Container>
   );
 };
