@@ -1,19 +1,15 @@
-import React, { Component, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
-import InputGroup from "react-bootstrap/InputGroup";
-import FormControl from "react-bootstrap/FormControl";
-import ListGroup from "react-bootstrap/ListGroup";
 import "../style/ToDoList.css";
 import { Trash, PencilSquare } from "react-bootstrap-icons";
 import AddTask from "./AddTask";
 import axios from "axios";
 import EditTask from "./EditTask";
 import { toast } from "react-toastify";
+import { useWebSocketMessage } from "../context/WebSocketContext";
 
 const ToDoList = () => {
   const location = useLocation();
@@ -24,64 +20,37 @@ const ToDoList = () => {
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
   const [showEditTaskModal, setShowEditTaskModal] = useState(false);
   const [taskDetails, setTaskDetails] = useState(null);
-  const [webSocketMessage, setWebSocketMessage] = useState("");
   const ws = useRef(null);
-
+  const { webSocketMessage } = useWebSocketMessage();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (task) {
-      setTasks(task);
-    } else {
-      fetchTasks();
-    }
-  }, [task]);
-
-  useEffect(() => {
-    ws.current = new WebSocket("ws://localhost:8080");
-
-    ws.current.onmessage = (event) => {
-      setWebSocketMessage(event.data);
-    };
-
-    return () => {
-      ws.current?.close();
-    };
-  }, []);
-
-  const fetchTasks = async () => {
-    try {
-      const response = await axios.post(
-        "https://mraesrsn9j.execute-api.eu-west-1.amazonaws.com/dev/get-tasks-by-username",
-        { username }
-      );
-      setTasks(response.data.task);
-    } catch (err) {
-      console.error("Error fetching tasks:", err);
-    }
-  };
-
-  useEffect(() => {
     handleClose();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleClose = async () => {
     console.log("handleClose called");
     setShowAddTaskModal(false);
-    await fetchTasks();
+    await axios
+      .post("http://localhost:3000/dev/get-tasks-by-username", { username })
+      .then((res) => {
+        console.log(res.data);
+        setTasks(res.data.tasks);
+      })
+      .catch((err) => {
+        console.error("Error fetching tasks:", err);
+      });
   };
 
-  const handleEditModalClose = async () => {
+  const handleEditModalClose = () => {
     console.log("handleEditModalClose called");
     setShowEditTaskModal(false);
-    await fetchTasks();
   };
 
   const deleteTask = async (id) => {
     try {
-      await axios.delete(
-        `https://mraesrsn9j.execute-api.eu-west-1.amazonaws.com/dev/delete-task/${id}`
-      );
+      await axios.delete(`http://localhost:3000/dev/delete-task/${id}`);
       toast.success("Task deleted successfully!", {
         className: "custom-toast",
         position: "top-right",
@@ -95,7 +64,7 @@ const ToDoList = () => {
       handleClose();
     } catch (err) {
       toast.error("Failed to delete task. Please try again.", {
-        className: "custom-toast",
+        className: "custom-toast  ",
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -113,7 +82,7 @@ const ToDoList = () => {
 
     try {
       const response = await axios.post(
-        "https://mraesrsn9j.execute-api.eu-west-1.amazonaws.com/dev/get-single-task",
+        "https://693utogn2j.execute-api.eu-west-1.amazonaws.com/dev/get-single-task",
         {
           id,
         }
@@ -131,6 +100,7 @@ const ToDoList = () => {
   };
 
   const handleShow = () => setShowAddTaskModal(true);
+  //   const handleEditModalShow = () => setShowEditTaskModal(true);
 
   return (
     <Container>
@@ -170,7 +140,7 @@ const ToDoList = () => {
           </button>
         </div>
 
-        {task ? (
+        {Array.isArray(tasks) && tasks.length > 0 ? (
           <ul>
             <div className="row">
               <div className="col-12">
@@ -187,7 +157,7 @@ const ToDoList = () => {
                   </thead>
 
                   <tbody>
-                    {task.map((task, index) => (
+                    {tasks.map((task, index) => (
                       <tr key={task.id || index}>
                         <td className="my-auto">{task.task_name}</td>
                         <td>{task.task_priority}</td>

@@ -1,5 +1,5 @@
 // App.js File
-import React, { Component, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import Container from "react-bootstrap/Container";
@@ -10,20 +10,20 @@ import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import axios from "axios";
 import AddUser from "./AddUser";
+import { useWebSocketMessage } from "../context/WebSocketContext";
 
 const HomePage = () => {
   const navigate = useNavigate();
   const [addUserModalShow, setAddUserModalShow] = useState(false);
   const [username, setUsername] = useState("");
-  const [tasks, setTasks] = useState(null);
-  const [webSocketMessage, setWebSocketMessage] = useState("");
+  const { webSocketMessage } = useWebSocketMessage();
   const ws = useRef(null);
 
   const getAllTasks = async () => {
     console.log(username);
-    console.log("https://mraesrsn9j.execute-api.eu-west-1.amazonaws.com/dev/get-tasks-by-username");
+    console.log("http://localhost:3000/dev/get-tasks-by-username");
     await axios
-      .post("https://mraesrsn9j.execute-api.eu-west-1.amazonaws.com/dev/get-tasks-by-username", { username })
+      .post("http://localhost:3000/dev/get-tasks-by-username", { username })
       .then((res) => {
         console.log(res.data);
         navigate("/my-tasks", {
@@ -41,18 +41,6 @@ const HomePage = () => {
     console.log("handleAddUserModalClose called");
     setAddUserModalShow(false);
   };
-
-  useEffect(() => {
-    ws.current = new WebSocket("ws://localhost:8080");
-
-    ws.current.onmessage = (event) => {
-      setWebSocketMessage(event.data);
-    };
-
-    return () => {
-      ws.current?.close();
-    };
-  }, []);
 
   return (
     <Container>
