@@ -11,7 +11,7 @@ import FormControl from "react-bootstrap/FormControl";
 import axios from "axios";
 import AddUser from "./AddUser";
 import { useWebSocketMessage } from "../context/WebSocketContext";
-import { apiUrl } from "../utils";
+import { apiUrl, apiVersion } from "../utils";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -22,9 +22,8 @@ const HomePage = () => {
 
   const getAllTasks = async () => {
     console.log(username);
-    console.log("https://693utogn2j.execute-api.eu-west-1.amazonaws.com/dev/get-tasks-by-username");
     await axios
-      .post(`${apiUrl}/get-tasks-by-username`, { username })
+      .post(`${apiUrl}/${apiVersion}/get-tasks-by-username`, { username })
       .then((res) => {
         console.log(res.data);
         navigate("/my-tasks", {

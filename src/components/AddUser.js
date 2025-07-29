@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { apiUrl } from "../utils";
+import { apiUrl, apiVersion } from "../utils";
 
 function AddUser({ show, handleAddUserModalClose }) {
   const [username, setUsername] = useState("");
@@ -19,7 +19,7 @@ function AddUser({ show, handleAddUserModalClose }) {
       console.log(requestBody);
 
       const response = await axios.post(
-        `http://localhost:3000/dev/add-user`,
+        `${apiUrl}/${apiVersion}/add-user`,
         requestBody
       );
       console.log("Task added successfully:", response.data);

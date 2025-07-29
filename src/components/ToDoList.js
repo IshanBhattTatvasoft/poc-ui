@@ -10,7 +10,7 @@ import axios from "axios";
 import EditTask from "./EditTask";
 import { toast } from "react-toastify";
 import { useWebSocketMessage } from "../context/WebSocketContext";
-import { apiUrl } from "../utils";
+import { apiUrl, apiVersion } from "../utils";
 
 const ToDoList = () => {
   const location = useLocation();
@@ -32,7 +32,7 @@ const ToDoList = () => {
     console.log("handleClose called");
     setShowAddTaskModal(false);
      await axios
-       .post(`${apiUrl}/get-tasks-by-username`, { username })
+       .post(`${apiUrl}/${apiVersion}/get-tasks-by-username`, { username })
        .then((res) => {
          console.log(res.data);
          setTasks(res.data.tasks);
@@ -49,7 +49,7 @@ const ToDoList = () => {
 
   const deleteTask = async (id) => {
     try {
-      await axios.delete(`${apiUrl}/delete-task/${id}`);
+      await axios.delete(`${apiUrl}/${apiVersion}/delete-task/${id}`);
       toast.success("Task deleted successfully!", {
         className: "custom-toast",
         position: "top-right",
@@ -80,9 +80,12 @@ const ToDoList = () => {
     console.log("Task id: " + id);
 
     try {
-      const response = await axios.post(`${apiUrl}/get-single-task`, {
-        id,
-      });
+      const response = await axios.post(
+        `${apiUrl}/${apiVersion}/get-single-task`,
+        {
+          id,
+        }
+      );
       console.log(response.data.task);
       setTaskDetails(response.data.task);
       setShowEditTaskModal(true);
