@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { apiUrl } from "../utils";
 
 function EditTask({
   show,
@@ -32,7 +33,6 @@ function EditTask({
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    console.log(`Field Updated: ${name}, Value: ${value}`);
     setUpdatedTaskDetails((prev) => ({
       ...prev,
       [name]:
@@ -41,7 +41,6 @@ function EditTask({
   };
 
   const updateTaskDetails = async () => {
-    console.log("Updated Task Details:", updatedTaskDetails);
     try {
       const requestBody = {
         task_name: updatedTaskDetails.name,
@@ -50,13 +49,11 @@ function EditTask({
         task_deadline: updatedTaskDetails.task_deadline,
       };
 
-      console.log("task_deadline in request body:: " + requestBody.task_deadline);
 
       const response = await axios.put(
-        `https://localhost:3000/dev/update-task/${taskDetails.id}`,
+        `${apiUrl}/update-task/${taskDetails.id}`,
         requestBody
       );
-      console.log("Updated task:", response.data);
 
       toast.success("Task updated successfully!", {
         className: "custom-toast",

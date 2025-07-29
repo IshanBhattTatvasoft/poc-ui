@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { apiUrl } from "../utils";
 
 function AddTask({ show, handleClose, username }) {
   const [taskName, setTaskName] = useState("");
@@ -12,7 +13,6 @@ function AddTask({ show, handleClose, username }) {
   const [isTaskAdded, setIsTaskAdded] = useState(false);
 
   const addTask = async () => {
-    console.log("taskDeadline:: " + taskDeadline);
     try {
       const requestBody = {
         username,
@@ -21,13 +21,11 @@ function AddTask({ show, handleClose, username }) {
         task_deadline: taskDeadline
       };
 
-      console.log(requestBody);
 
       const response = await axios.post(
-        "http://localhost:3000/dev/add-task",
+        `${apiUrl}/add-task`,
         requestBody
       );
-      console.log("Task added successfully:", response.data);
 
       setTaskName("");
       setTaskPriority("medium");

@@ -10,13 +10,12 @@ import axios from "axios";
 import EditTask from "./EditTask";
 import { toast } from "react-toastify";
 import { useWebSocketMessage } from "../context/WebSocketContext";
+import { apiUrl } from "../utils";
 
 const ToDoList = () => {
   const location = useLocation();
   const { task, username } = location.state || {};
-  console.log("task::: ", task);
   const [tasks, setTasks] = useState(task);
-  console.log("tasks::: ", tasks);
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
   const [showEditTaskModal, setShowEditTaskModal] = useState(false);
   const [taskDetails, setTaskDetails] = useState(null);
@@ -30,12 +29,10 @@ const ToDoList = () => {
   }, []);
 
   const handleClose = async () => {
-    console.log("handleClose called");
     setShowAddTaskModal(false);
     await axios
-      .post("http://localhost:3000/dev/get-tasks-by-username", { username })
+      .post(`${apiUrl}/get-tasks-by-username`, { username })
       .then((res) => {
-        console.log(res.data);
         setTasks(res.data.tasks);
       })
       .catch((err) => {
@@ -44,13 +41,12 @@ const ToDoList = () => {
   };
 
   const handleEditModalClose = () => {
-    console.log("handleEditModalClose called");
     setShowEditTaskModal(false);
   };
 
   const deleteTask = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/dev/delete-task/${id}`);
+      await axios.delete(`${apiUrl}/delete-task/${id}`);
       toast.success("Task deleted successfully!", {
         className: "custom-toast",
         position: "top-right",
@@ -78,16 +74,14 @@ const ToDoList = () => {
   };
 
   const getTaskDetails = async (id) => {
-    console.log("Task id: " + id);
 
     try {
       const response = await axios.post(
-        "https://693utogn2j.execute-api.eu-west-1.amazonaws.com/dev/get-single-task",
+        `${apiUrl}/get-single-task`,
         {
           id,
         }
       );
-      console.log(response.data.task);
       setTaskDetails(response.data.task);
       setShowEditTaskModal(true);
     } catch (error) {

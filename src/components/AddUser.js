@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { apiUrl } from "../utils";
 
 function AddUser({ show, handleAddUserModalClose }) {
   const [username, setUsername] = useState("");
@@ -17,13 +18,11 @@ function AddUser({ show, handleAddUserModalClose }) {
         password: password,
       };
 
-      console.log(requestBody);
 
       const response = await axios.post(
-        "https://mraesrsn9j.execute-api.eu-west-1.amazonaws.com/dev/add-user",
+        `${apiUrl}/add-user`,
         requestBody
       );
-      console.log("Task added successfully:", response.data);
 
       toast.success("User added successfully!", {
         className: "custom-toast",
