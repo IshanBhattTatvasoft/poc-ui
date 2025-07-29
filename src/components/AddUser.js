@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { apiUrl } from "../utils";
+import { apiUrl, apiVersion } from "../utils";
 
 function AddUser({ show, handleAddUserModalClose }) {
   const [username, setUsername] = useState("");
@@ -20,7 +20,7 @@ function AddUser({ show, handleAddUserModalClose }) {
 
 
       const response = await axios.post(
-        `${apiUrl}/add-user`,
+        `${apiUrl}/${apiVersion}/add-user`,
         requestBody
       );
 

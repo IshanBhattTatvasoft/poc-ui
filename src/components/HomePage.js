@@ -11,7 +11,7 @@ import FormControl from "react-bootstrap/FormControl";
 import axios from "axios";
 import AddUser from "./AddUser";
 import { useWebSocketMessage } from "../context/WebSocketContext";
-import { apiUrl } from "../utils";
+import { apiUrl, apiVersion } from "../utils";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const HomePage = () => {
 
   const getAllTasks = async () => {
     await axios
-      .post(`${apiUrl}/get-tasks-by-username`, { username })
+      .post(`${apiUrl}/${apiVersion}/get-tasks-by-username`, { username })
       .then((res) => {
         navigate("/my-tasks", {
           state: { task: res.data.tasks, username: username },
