@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { apiUrl } from "../utils";
 
 function EditTask({
   show,
@@ -45,7 +46,7 @@ function EditTask({
       };
 
       const response = await axios.put(
-        `https://693utogn2j.execute-api.eu-west-1.amazonaws.com/dev/update-task/${taskDetails.id}`,
+        `${apiUrl}/update-task/${taskDetails.id}`,
         requestBody
       );
       console.log("Updated task:", response.data);

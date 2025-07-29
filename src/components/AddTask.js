@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { apiUrl } from "../utils";
 
 function AddTask({ show, handleClose, username }) {
   const [taskName, setTaskName] = useState("");
@@ -20,10 +21,7 @@ function AddTask({ show, handleClose, username }) {
 
       console.log(requestBody);
 
-      const response = await axios.post(
-        "https://693utogn2j.execute-api.eu-west-1.amazonaws.com/dev/add-task",
-        requestBody
-      );
+      const response = await axios.post(`${apiUrl}/add-task`, requestBody);
       console.log("Task added successfully:", response.data);
 
       setTaskName("");

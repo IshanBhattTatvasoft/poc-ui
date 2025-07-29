@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { apiUrl } from "../utils";
 
 function AddUser({ show, handleAddUserModalClose }) {
   const [username, setUsername] = useState("");
@@ -18,7 +19,7 @@ function AddUser({ show, handleAddUserModalClose }) {
       console.log(requestBody);
 
       const response = await axios.post(
-        "https://693utogn2j.execute-api.eu-west-1.amazonaws.com/dev/add-user",
+        `http://localhost:3000/dev/add-user`,
         requestBody
       );
       console.log("Task added successfully:", response.data);
@@ -37,7 +38,7 @@ function AddUser({ show, handleAddUserModalClose }) {
       handleAddUserModalClose();
     } catch (error) {
       console.error("Error adding task:", error);
-      toast.error("Failed to add user. Please try again.", {
+      toast.error(`${error.response.data.message}`, {
         className: "custom-toast  ",
         position: "top-right",
         autoClose: 3000,

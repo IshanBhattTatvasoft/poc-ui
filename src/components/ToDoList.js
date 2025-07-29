@@ -10,6 +10,7 @@ import axios from "axios";
 import EditTask from "./EditTask";
 import { toast } from "react-toastify";
 import { useWebSocketMessage } from "../context/WebSocketContext";
+import { apiUrl } from "../utils";
 
 const ToDoList = () => {
   const location = useLocation();
@@ -22,7 +23,6 @@ const ToDoList = () => {
   const { webSocketMessage } = useWebSocketMessage();
   const navigate = useNavigate();
 
-
   useEffect(() => {
     handleClose();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -31,15 +31,15 @@ const ToDoList = () => {
   const handleClose = async () => {
     console.log("handleClose called");
     setShowAddTaskModal(false);
-    await axios
-      .post("https://693utogn2j.execute-api.eu-west-1.amazonaws.com/dev/get-tasks-by-username", { username })
-      .then((res) => {
-        console.log(res.data);
-        setTasks(res.data.tasks);
-      })
-      .catch((err) => {
-        console.error("Error fetching tasks:", err);
-      });
+     await axios
+       .post(`${apiUrl}/get-tasks-by-username`, { username })
+       .then((res) => {
+         console.log(res.data);
+         setTasks(res.data.tasks);
+       })
+       .catch((err) => {
+         console.error("Error fetching tasks:", err);
+       });
   };
 
   const handleEditModalClose = () => {
@@ -49,7 +49,7 @@ const ToDoList = () => {
 
   const deleteTask = async (id) => {
     try {
-      await axios.delete(`https://693utogn2j.execute-api.eu-west-1.amazonaws.com/dev/delete-task/${id}`);
+      await axios.delete(`${apiUrl}/delete-task/${id}`);
       toast.success("Task deleted successfully!", {
         className: "custom-toast",
         position: "top-right",
@@ -80,12 +80,9 @@ const ToDoList = () => {
     console.log("Task id: " + id);
 
     try {
-      const response = await axios.post(
-        "https://693utogn2j.execute-api.eu-west-1.amazonaws.com/dev/get-single-task",
-        {
-          id,
-        }
-      );
+      const response = await axios.post(`${apiUrl}/get-single-task`, {
+        id,
+      });
       console.log(response.data.task);
       setTaskDetails(response.data.task);
       setShowEditTaskModal(true);
