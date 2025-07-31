@@ -11,6 +11,8 @@ import EditTask from "./EditTask";
 import { toast } from "react-toastify";
 import { useWebSocketMessage } from "../context/WebSocketContext";
 import { apiUrl, apiVersion } from "../utils";
+import Header from "./Footer";
+import Footer from "./Footer";
 
 const ToDoList = () => {
   const location = useLocation();
@@ -31,15 +33,15 @@ const ToDoList = () => {
   const handleClose = async () => {
     console.log("handleClose called");
     setShowAddTaskModal(false);
-     await axios
-       .post(`${apiUrl}/${apiVersion}/get-tasks-by-username`, { username })
-       .then((res) => {
-         console.log(res.data);
-         setTasks(res.data.tasks);
-       })
-       .catch((err) => {
-         console.error("Error fetching tasks:", err);
-       });
+    await axios
+      .post(`${apiUrl}/${apiVersion}/get-tasks-by-username`, { username })
+      .then((res) => {
+        console.log(res.data);
+        setTasks(res.data.tasks);
+      })
+      .catch((err) => {
+        console.error("Error fetching tasks:", err);
+      });
   };
 
   const handleEditModalClose = () => {
@@ -102,124 +104,127 @@ const ToDoList = () => {
   //   const handleEditModalShow = () => setShowEditTaskModal(true);
 
   return (
-    <Container>
-      <div>
-        <Row
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            fontSize: "2rem",
-            fontWeight: "bolder",
-          }}
-        >
-          {username}'s tasks
-        </Row>
-
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginBottom: "30px",
-          }}
-        >
-          <button
-            type="button"
-            className="btn btn-primary add-task-button"
-            onClick={handleShow}
+    <>
+      <Container>
+        <div>
+          <Row
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: "2rem",
+              fontWeight: "bolder",
+            }}
           >
-            Add Task
-          </button>
+            {username}'s tasks
+          </Row>
 
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={navigateToHome}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginBottom: "30px",
+            }}
           >
-            Back
-          </button>
-        </div>
+            <button
+              type="button"
+              className="btn btn-primary add-task-button"
+              onClick={handleShow}
+            >
+              Add Task
+            </button>
 
-        {Array.isArray(tasks) && tasks.length > 0 ? (
-          <ul>
-            <div className="row">
-              <div className="col-12">
-                <table className="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th scope="col">Task Name</th>
-                      <th scope="col">Task Priority</th>
-                      <th scope="col">Task Completed?</th>
-                      <th scope="col">Actions</th>
-                    </tr>
-                  </thead>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={navigateToHome}
+            >
+              Back
+            </button>
+          </div>
 
-                  <tbody>
-                    {tasks.map((task, index) => (
+          {Array.isArray(tasks) && tasks.length > 0 ? (
+            <ul>
+              <div className="row">
+                <div className="col-12">
+                  <table className="table table-bordered">
+                    <thead>
                       <tr>
-                        <td className="my-auto">{task.task_name}</td>
-                        <td>{task.task_priority}</td>
-                        <td>{task.istaskcompleted ? "Yes" : "No"}</td>
-                        <td>
-                          <button
-                            type="button"
-                            className="btn btn-success me-4"
-                            onClick={() => getTaskDetails(task.id)}
-                          >
-                            <PencilSquare className="actionButton" />
-                          </button>
-                          <button type="button" className="btn btn-danger">
-                            <Trash
-                              className="actionButton"
-                              onClick={() => deleteTask(task.id)}
-                            />
-                          </button>
-                        </td>
+                        <th scope="col">Task Name</th>
+                        <th scope="col">Task Priority</th>
+                        <th scope="col">Task Completed?</th>
+                        <th scope="col">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+
+                    <tbody>
+                      {tasks.map((task, index) => (
+                        <tr>
+                          <td className="my-auto">{task.task_name}</td>
+                          <td>{task.task_priority}</td>
+                          <td>{task.istaskcompleted ? "Yes" : "No"}</td>
+                          <td>
+                            <button
+                              type="button"
+                              className="btn btn-success me-4"
+                              onClick={() => getTaskDetails(task.id)}
+                            >
+                              <PencilSquare className="actionButton" />
+                            </button>
+                            <button type="button" className="btn btn-danger">
+                              <Trash
+                                className="actionButton"
+                                onClick={() => deleteTask(task.id)}
+                              />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
-          </ul>
-        ) : (
-          <p>No tasks available</p>
-        )}
-      </div>
-
-      <AddTask
-        show={showAddTaskModal}
-        handleClose={handleClose}
-        username={username}
-      />
-
-      <EditTask
-        show={showEditTaskModal}
-        handleEditModalClose={handleEditModalClose}
-        handleClose={handleClose}
-        username={username}
-        taskDetails={taskDetails}
-      />
-
-      {webSocketMessage && (
-        <div
-          style={{
-            position: "fixed",
-            bottom: "10px",
-            left: "10px",
-            color: "black",
-            padding: "8px 12px",
-            border: "1px solid black",
-            borderRadius: "4px",
-            fontSize: "1.3rem",
-            fontWeight: "bold",
-            zIndex: 9999,
-          }}
-        >
-          {webSocketMessage}
+            </ul>
+          ) : (
+            <p>No tasks available</p>
+          )}
         </div>
-      )}
-    </Container>
+
+        <AddTask
+          show={showAddTaskModal}
+          handleClose={handleClose}
+          username={username}
+        />
+
+        <EditTask
+          show={showEditTaskModal}
+          handleEditModalClose={handleEditModalClose}
+          handleClose={handleClose}
+          username={username}
+          taskDetails={taskDetails}
+        />
+
+        {webSocketMessage && (
+          <div
+            style={{
+              position: "fixed",
+              bottom: "10px",
+              left: "10px",
+              color: "black",
+              padding: "8px 12px",
+              border: "1px solid black",
+              borderRadius: "4px",
+              fontSize: "1.3rem",
+              fontWeight: "bold",
+              zIndex: 9999,
+            }}
+          >
+            {webSocketMessage}
+          </div>
+        )}
+      </Container>
+      <Footer/>
+    </>
   );
 };
 
