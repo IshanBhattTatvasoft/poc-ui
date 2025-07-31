@@ -12,6 +12,7 @@ import axios from "axios";
 import AddUser from "./AddUser";
 import { useWebSocketMessage } from "../context/WebSocketContext";
 import { apiUrl, apiVersion } from "../utils";
+import Footer from "./Footer";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -40,79 +41,70 @@ const HomePage = () => {
   };
 
   return (
-    <Container>
-      <Row
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          fontSize: "3rem",
-          fontWeight: "bolder",
-        }}
-      >
-        TODO LIST Version 2
-      </Row>
-
-      <hr />
-      <Row>
-        <Col md={{ span: 5, offset: 4 }}>
-          <InputGroup className="mb-3">
-            <FormControl
-              placeholder="Enter Username"
-              size="lg"
-              aria-label="add something"
-              aria-describedby="basic-addon2"
-              onChange={(e) => {
-                setUsername(e.target.value);
-              }}
-            />
-            <InputGroup>
-              <Button
-                variant="dark"
-                className="mt-3 mx-auto"
-                onClick={getAllTasks}
-              >
-                Get Tasks
-              </Button>
+    <>
+      <Container>
+        <Row>
+          <Col md={{ span: 5, offset: 4 }}>
+            <InputGroup className="mb-3">
+              <FormControl
+                placeholder="Enter Username"
+                size="lg"
+                aria-label="add something"
+                aria-describedby="basic-addon2"
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                }}
+              />
+              <InputGroup>
+                <Button
+                  variant="dark"
+                  className="mt-3 mx-auto"
+                  onClick={getAllTasks}
+                >
+                  Get Tasks
+                </Button>
+              </InputGroup>
             </InputGroup>
-          </InputGroup>
-          <span>
-            If you are a new user,{" "}
-            <Button
-              style={{ padding: "0px", textDecoration: "none" }}
-              variant="link"
-              onClick={handleAddUserModal}
-            >
-              click here
-            </Button>{" "}
-          </span>
-        </Col>
-      </Row>
+            <span>
+              If you are a new user,{" "}
+              <Button
+                style={{ padding: "0px", textDecoration: "none" }}
+                variant="link"
+                onClick={handleAddUserModal}
+              >
+                click here
+              </Button>{" "}
+            </span>
+          </Col>
+        </Row>
 
-      <AddUser
-        show={addUserModalShow}
-        handleAddUserModalClose={handleAddUserModalClose}
-      />
+        <AddUser
+          show={addUserModalShow}
+          handleAddUserModalClose={handleAddUserModalClose}
+        />
 
-      {webSocketMessage && (
-        <div
-          style={{
-            position: "fixed",
-            bottom: "10px",
-            left: "10px",
-            color: "black",
-            padding: "8px 12px",
-            border: "1px solid black",
-            borderRadius: "4px",
-            fontSize: "1.3rem",
-            fontWeight: "bold",
-            zIndex: 9999,
-          }}
-        >
-          {webSocketMessage}
-        </div>
-      )}
-    </Container>
+        {webSocketMessage && (
+          <div
+            style={{
+              position: "fixed",
+              bottom: "10px",
+              left: "10px",
+              color: "black",
+              padding: "8px 12px",
+              border: "1px solid black",
+              borderRadius: "4px",
+              fontSize: "1.3rem",
+              fontWeight: "bold",
+              zIndex: 9999,
+            }}
+          >
+            {webSocketMessage}
+          </div>
+        )}
+      </Container>
+
+      <Footer/>
+    </>
   );
 };
 
